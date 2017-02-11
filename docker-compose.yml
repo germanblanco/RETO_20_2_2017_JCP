@@ -1,0 +1,54 @@
+version: "2"
+services:
+
+  db1:
+    container_name: db1
+    build: ./DB
+    networks: ["vnet"]
+    ports:
+      - 3306:3306
+    expose:
+      - 3306
+    environment: 
+      MYSQL_ROOT_PASSWORD: passwd
+
+  coordinator-1:
+    container_name: coordinator-1
+    networks: ["vnet"]
+    depends_on:
+      - db1
+    links:
+      - db1:reto1db
+    hostname: coordinator-1.vnet
+    build:
+      context: ./PrestoDB
+      args:
+        VERSION: 0.165
+    ports: 
+      - 8080:8080
+    environment:
+      - PRESTO_JVM_MAX_HEAP=512M
+      - PRESTO_QUERY_MAX_MEMORY=1GB
+      - PRESTO_QUERY_MAX_MEMORY_PER_NODE=256MB
+      - TERM=xterm
+      - PRESTO_DISCOVERY_PORT=8080
+      - PRESTO_DISCOVERY_URI=http://coordinator-1.vnet:8080
+    command: coordinator
+      
+  zeppelin:
+    container_name: zeppelin 
+    networks: ["vnet"]
+    hostname: zeppelin
+    build:
+      context: ./Zeppelin
+    ports:
+      - 8880:8880
+    expose:
+      - 8880
+    environment:
+      - ZEPPELIN_PORT=8880
+      
+networks:
+  vnet:
+    external:
+      name: vnet 
