@@ -4,4 +4,6 @@ Esta tarea consiste en crear un interprete de Zeppelin para Presto y otro para M
 
 En este repositorio hay un docker-compose.yml con el que se levanta una base de datos MySQL, un Presto conectado a esa base de datos y un Zeppelin en el que aun no estan configurados los interpretes. El objetivo es modificar la imagen de docker de Zeppelin para que incluya el interprete de MySQL y el de Presto. Por favor, cuando este terminada la tarea, hacer un Pull Request a este repositorio.
 
+En el directorio ./Zeppelin/lib se encuentran los drivers JDBC para MySQL y Presto.
+
 Suerte!
